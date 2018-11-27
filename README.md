@@ -48,7 +48,7 @@ password = Oa5p_test
 
 Set up your database connection data and credentials. The data must match the data used for your My Thai Star server.
 
-*Example*
+**Example**
 
 ```
 [hana]
@@ -64,12 +64,12 @@ Save the file as `config.ini`.
 
 Before you can run the data generator, some historical data must be placed into the `resources` directory. This data will be used as the basis for the data generation.
 
-*NOTE:* The sources of the data listed below are third-party web sites. In order to use the data from these web sites you must accept and comply with the respective terms of use.
+> **NOTE:** The sources of the data listed below are third-party web sites. In order to use the data from these web sites you must accept and comply with the respective terms of use.
 
 ### Weather data
 Weather data can be obtained from the [DWD website](https://www.dwd.de/DE/leistungen/klimadatendeutschland/klarchivtagmonat.html). 
 
-- On the climate data download page select a suitable weather station, for example, Frankfurt/Main
+- On the climate data download page select a suitable weather station, for example, `Frankfurt/Main`
 - Click on the download icon
 - Save the file to your local computer
 - Open the downloaded zip archive and extract the file starting with `produkt_klima_tag` (e.g. `produkt_klima_tag_20161229_20180701_05906.txt`) to the `resources` directory
