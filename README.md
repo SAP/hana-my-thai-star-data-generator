@@ -9,9 +9,10 @@ This data generator can be used to generate the required data.
 
 # Requirements
 
-- Python 3.7
-- A SAP HANA database instance
-- Installed and configured My Thai Star server
+- [Python 3.7](https://www.python.org/downloads/) or higher
+- A [SAP HANA](https://developers.sap.com/topics/sap-hana-express.html) database instance
+- A [Git](https://git-scm.com/downloads) client
+- Installed and configured [My Thai Star](https://github.com/devonfw/my-thai-star) server
 
 # Download and Installation
 
