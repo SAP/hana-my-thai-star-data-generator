@@ -30,12 +30,12 @@ cd hana-my-thai-star-data-generator
 Use `pip` to install dependencies:
 
 ```
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 # Configuration
 
-## Database Access
+## Database access
 
 Open the `config.sample.ini` file.
 
@@ -105,6 +105,33 @@ Fake names for customer data can be generated at [https://www.fakenamegenerator.
 - Click on the button labeled "Place your free order"
 - Save the file to the `resources` directory
 - Rename the file to `names.csv`
+
+# Usage
+
+After you have installed and configured the generator you can run it from the generator's root directory.
+
+```
+$ python src/main.py
+```
+
+While the generator is running it will display progress information. The output of a successful generator run looks like the following:
+
+```
+Clean up...
+Insert users...
+100% inserted...
+Insert date info...
+100% inserted...
+Insert orders...
+Dish 0: 100% inserted...
+Dish 1: 100% inserted...
+Dish 2: 100% inserted...
+Dish 3: 100% inserted...
+Dish 4: 100% inserted...
+Dish 5: 100% inserted...
+Dish 6: 100% inserted...
+Finished.
+```
 
 # How to obtain support
 
