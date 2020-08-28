@@ -67,7 +67,7 @@ def clean_up():
 
     for table in tables:
         if table == '"USER"':
-            query ="""delete from "USER" where "USERNAME" NOT IN ('manager', 'waiter', 'user0')"""
+            query ="""delete from "USER" where "USERNAME" NOT IN ('manager', 'waiter', 'user0', 'cook', 'barkeeper', 'chief')"""
             cursor.execute(query)
         else:
             cursor.execute('delete from {}'.format(table))
