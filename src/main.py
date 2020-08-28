@@ -14,11 +14,11 @@ import holiday
 import users
 import math_utils
 
-weather_year_data = [x for x in weather.get_weather_data() if x['date'].year == 2017]
+today = datetime.date.today()
+weather_year_data = [x for x in weather.get_weather_data() if x['date'].year == today.year]
 holidays = holiday.get_holiday_data()
 user_data = users.generate_data()
 
-today = datetime.date.today()
 dates = [datetime.date(today.year - 1, 1, 1) + datetime.timedelta(days=i) for i in range(365 * 2)]
 
 # Loop weather data
