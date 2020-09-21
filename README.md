@@ -45,9 +45,10 @@ host = localhost
 port = 30015
 user = OASP_TEST
 password = Oa5p_test
+express_edition = true
 ```
 
-Set up your database connection data and credentials. The data must match the data used for your My Thai Star server.
+Set up your database connection data and credentials. The data must match the data used for your My Thai Star server. If you are using a SAP HANA express edition database you have to set `express_edition` to `true`. If you're using a different SAP HANA edition you can set it to `false` or omit it. This will speed up the generation at the cost of some more server processing time.
 
 **Example**
 
@@ -57,6 +58,7 @@ host = hxehost
 port = 39015
 user = MY_THAI_STAR_USER
 password = My_Pa$$word
+express_edition = true
 ```
 
 Save the file as `config.ini`.
@@ -108,7 +110,13 @@ Fake names for customer data can be generated at [https://www.fakenamegenerator.
 
 # Usage
 
-After you have installed and configured the generator you can run it from the generator's root directory.
+After you have installed and configured the generator you have to first generate the consolidated address data by running the address generator from the generator's root directory.
+
+```
+$ python src/address_generator.py
+```
+
+Then you can run the main generator from the generator's root directory.
 
 ```
 $ python src/main.py

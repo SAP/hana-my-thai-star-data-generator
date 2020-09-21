@@ -16,22 +16,24 @@ def generate_record(i, row, addresses):
         'housenumber': re.search(r'\d+', address['housenumber']).group(),
         'plz': address['plz'],
         'city': 'Heidelberg',
-        'country': 'Deutschland'
+        'country': 'Deutschland',
+        'geocode': address['geocode']
     }
 
 def generate_data():
-    file = open(path.join(path.dirname(__file__), '..', 'resources', 'names.csv'), newline='', encoding='utf-8')
+    file = open(path.join(path.dirname(path.dirname(__file__)), 'resources', 'names.csv'), newline='', encoding='utf-8')
     data = csv.reader(file, delimiter=',')
     names = list(data)[1:]
 
-    file = open(path.join(path.dirname(__file__), '..', 'resources', 'heidelberg-buildings.csv'), newline='', encoding='utf-8')
+    file = open(path.join(path.dirname(path.dirname(__file__)), 'resources', 'heidelberg-buildings.csv'), newline='', encoding='utf-8')
     data = csv.reader(file, delimiter='\t')
 
     addresses = [
         {
             'plz': row[0],
             'street': row[1],
-            'housenumber': row[2]
+            'housenumber': row[2],
+            'geocode': row[3]
         }
         for i, row in enumerate(data)
         if i >= 1

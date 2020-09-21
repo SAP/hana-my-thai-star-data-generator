@@ -1,5 +1,4 @@
-#pyhdb installed from https://github.com/SAP/PyHDB/
-import pyhdb
+from hdbcli import dbapi
 import sys
 import configparser
 import datetime
@@ -15,11 +14,20 @@ import users
 import math_utils
 
 today = datetime.date.today()
-weather_year_data = [x for x in weather.get_weather_data() if x['date'].year == today.year]
+weather_year_data = [x for x in weather.get_weather_data() if x['date'].year == 2017]
 holidays = holiday.get_holiday_data()
 user_data = users.generate_data()
 
 dates = [datetime.date(today.year - 1, 1, 1) + datetime.timedelta(days=i) for i in range(365 * 2)]
+
+insertAddressTemplate = '''
+                    insert into "ADDRESSES"
+                    (idUser, street, housenumber, plz, city, country, geocode)
+                    values(:1, :2, :3, :4, :5, :6, {})
+                '''
+insertAddress = insertAddressTemplate.format(':7')
+insertAddressWithPoint = insertAddressTemplate.format('ST_GeomFromWKT(:7, 4326)')
+insertAddressWithPolygon = insertAddressTemplate.format("new ST_Polygon(:7, 1000004326).ST_Centroid().ST_Transform(4326)")
 
 # Loop weather data
 
@@ -50,8 +58,8 @@ def generate_orders():
 
 orders = generate_orders()
 
-def clean_up():
-    connection = create_connection()
+def clean_up(config):
+    connection = create_connection(config)
     cursor = connection.cursor()
 
     tables = [
@@ -74,10 +82,11 @@ def clean_up():
 
     connection.commit()
 
-def insert_users():
-    connection = create_connection()
+def insert_users(config):
+    connection = create_connection(config)
     cursor = connection.cursor()
     old_percent = -1
+    isHANAExpress = config.getboolean('hana', 'express_edition', fallback=False)
 
     for i, row in enumerate(user_data):
         try:
@@ -87,28 +96,31 @@ def insert_users():
                     (id, modificationCounter, username, password, email, idRole)
                     values(:1, 1, :2, :3, :4, 0)
                 ''',
-                [
+                (
                     row['id'],
                     row['username'],
                     row['password'],
                     row['email']
-                ]
+                )
             )
 
+            sql = insertAddress
+            if isHANAExpress and row['geocode'] is not None:
+                if row['geocode'].startswith('POLYGON'):
+                    sql = insertAddressWithPolygon
+                else:
+                    sql = insertAddressWithPoint
             cursor.execute(
-                '''
-                    insert into "ADDRESSES"
-                    (idUser, street, housenumber, plz, city, country)
-                    values(:1, :2, :3, :4, :5, :6)
-                ''',
-                [
+                sql,
+                (
                     row['id'],
                     row['street'],
                     row['housenumber'],
                     row['plz'],
                     row['city'],
-                    row['country']
-                ]
+                    row['country'],
+                    row['geocode']
+                )
             )
         except ValueError:
             pass
@@ -121,8 +133,8 @@ def insert_users():
     print()
     connection.commit()
 
-def insert_date_info():
-    connection = create_connection()
+def insert_date_info(config):
+    connection = create_connection(config)
     cursor = connection.cursor()
     old_percent = -1
 
@@ -131,7 +143,7 @@ def insert_date_info():
             designation = next((x['designation'] for x in holidays if x['date'] == row['date']), None)
             cursor.execute(
                 'insert into "DATEINFO" values(:1, :2, :3)',
-                [row['date'], row['temperature'], designation]
+                (row['date'], row['temperature'], designation)
             )
         except ValueError:
             pass
@@ -219,7 +231,7 @@ def get_dish_users(dish_id):
 
     return list(zip(dates, dish_users))
 
-def insert_orders():
+def insert_orders(config):
     booking_id = 0
     order_id = 0
     order_line_id = 0
@@ -227,7 +239,7 @@ def insert_orders():
     dish_ids = set([order_data['dish_id'] for order_data in orders])
 
     for dish_id in dish_ids:
-        connection = create_connection()
+        connection = create_connection(config)
         cursor = connection.cursor()
 
         dish_users = get_dish_users(dish_id)
@@ -242,13 +254,13 @@ def insert_orders():
                     ("ID", "MODIFICATIONCOUNTER", "IDUSER", "NAME", "EMAIL", "BOOKINGDATE", "EXPIRATIONDATE", "CREATIONDATE", "BOOKINGTYPE", "IDTABLE", "IDORDER", "ASSISTANTS")
                     values(:1, 1, :2, :3, :4, :5, :5, :5, 0, 1, 0, 0)
                 ''',
-                [
+                (
                     booking_id,
                     user['id'],
                     user['name'],
                     user['email'],
                     datetime.datetime(date.year, date.month, date.day)
-                ]
+                )
             )
 
             # Insert order
@@ -259,7 +271,7 @@ def insert_orders():
                     ("ID", "MODIFICATIONCOUNTER", "IDBOOKING", "IDINVITEDGUEST", "IDHOST")
                     values(:1, 1, :2, NULL, NULL)
                 ''',
-                [order_id, booking_id]
+                (order_id, booking_id)
             )
 
             # Insert order line
@@ -270,7 +282,7 @@ def insert_orders():
                     ("ID", "MODIFICATIONCOUNTER", "IDDISH", "AMOUNT", "IDORDER")
                     values(:1, 1, :2, 1, :3)
                 ''',
-                [order_line_id, dish_id, order_id]
+                (order_line_id, dish_id, order_id)
             )
 
             booking_id += 1
@@ -286,12 +298,9 @@ def insert_orders():
 
         print()
 
-def create_connection():
-    config = configparser.ConfigParser()
-    config.read(path.join(path.dirname(__file__), '..', 'config.ini'))
-
-    connection = pyhdb.connect(
-        host=config['hana']['host'],
+def create_connection(config):
+    connection = dbapi.connect(
+        address=config['hana']['host'],
         port=config['hana']['port'],
         user=config['hana']['user'],
         password=config['hana']['password']
@@ -300,17 +309,20 @@ def create_connection():
     return connection
 
 def main():
+    config = configparser.ConfigParser()
+    config.read(path.join(path.dirname(path.dirname(__file__)), 'config.ini'))
+
     print('Clean up...')
-    clean_up()
+    clean_up(config)
 
     print('Insert users...')
-    insert_users()
+    insert_users(config)
 
     print('Insert date info...')
-    insert_date_info()
+    insert_date_info(config)
 
     print('Insert orders...')
-    insert_orders()
+    insert_orders(config)
 
     print('Finished.')
 

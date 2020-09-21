@@ -8,7 +8,7 @@ from os import path
 
 def get_weather_data():
     result = []
-    with open(path.join(path.dirname(__file__), '..', 'resources', 'weather.txt'), 'r') as file:
+    with open(path.join(path.dirname(path.dirname(__file__)), 'resources', 'weather.txt'), 'r') as file:
         reader = csv.reader(file, delimiter=';')
         for row in reader:
             try:

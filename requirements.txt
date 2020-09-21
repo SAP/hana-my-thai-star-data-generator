@@ -1,2 +1,2 @@
 plotly==2.7.0
-pyhdb==0.3.4
+hdbcli==2.5.101
