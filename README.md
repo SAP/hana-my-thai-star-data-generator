@@ -79,7 +79,7 @@ Weather data can be obtained from the [DWD website](https://www.dwd.de/DE/leistu
 - Rename the file to `weather.txt`.
 
 ### Holiday data
-Holiday data can be obtained from [feiertagskalender.ch](https://www.feiertagskalender.ch/export.php?geo=3060&jahr=2018&klasse=5&hl=en). 
+Holiday data can be obtained from [feiertagskalender.ch](https://www.feiertagskalender.ch/export.php?geo=3060&klasse=5&hl=en). 
 
 - Review the [Terms of use](https://www.feiertagskalender.ch/tos.php?geo=3060&hl=en)
 - If you agree to the terms of use, download the CSV file and save it to the `resources` directory
