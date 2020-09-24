@@ -71,13 +71,13 @@ def address_generate(postal_codes):
                         coordinates = find_coordinates(nodeDict, node_id)
                         lat = coordinates['lat']
                         lon = coordinates['lon']
-                        geocode = 'POINT(' + lat + ' ' + lon + ')'
+                        geocode = 'POINT(' + lon + ' ' + lat + ')'
                     elif len(nodes) == 2:
                         node_id = nodes[0].attrib.get('ref')
                         coordinates = find_coordinates(nodeDict, node_id)
                         lat = coordinates['lat']
                         lon = coordinates['lon']
-                        geocode = 'POINT(' + lat + ' ' + lon + ')'
+                        geocode = 'POINT(' + lon + ' ' + lat + ')'
                     else:
                         geocode = 'POLYGON(('
                         for node in nodes:
@@ -87,10 +87,10 @@ def address_generate(postal_codes):
                             coordinates = find_coordinates(nodeDict, node_id)
                             lat = coordinates['lat']
                             lon = coordinates['lon']
-                            geocode += lat + ' ' + lon
+                            geocode += lon + ' ' + lat
                         geocode += '))'
                 else:
-                    geocode = 'POINT(' + lat + ' ' + lon + ')'
+                    geocode = 'POINT(' + lon + ' ' + lat + ')'
 
             if len(street) > 0 and len(housenumber) > 0:
                 if len(postcode) > 0 and postcode[0].attrib['v'] not in postal_codes:

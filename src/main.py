@@ -14,7 +14,10 @@ import users
 import math_utils
 
 today = datetime.date.today()
-weather_year_data = [x for x in weather.get_weather_data() if x['date'].year == 2017]
+weather_year_data = [x for x in weather.get_weather_data() if x['date'].year == today.year]
+if len(weather_year_data) == 0:
+    print("No weather data found for the year %s"%today.year)
+    sys.exit(1)
 holidays = holiday.get_holiday_data()
 user_data = users.generate_data()
 
@@ -123,6 +126,9 @@ def insert_users(config):
                 )
             )
         except ValueError:
+            pass
+        except dbapi.Error as e:
+            print ("Unable to import address " + row['id'] + ": " + e)
             pass
 
         percent = round(i * 100 / len(user_data))
