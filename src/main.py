@@ -128,7 +128,7 @@ def insert_users(config):
         except ValueError:
             pass
         except dbapi.Error as e:
-            print ("Unable to import address " + row['id'] + ": " + e)
+            print ("Unable to import address " + str(row['id']) + ": " + e)
             pass
 
         percent = round(i * 100 / len(user_data))
