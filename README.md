@@ -153,4 +153,4 @@ Once the issue is open, please create a new pull request and reference the issue
 
 # License
 
-Copyright (c) 2018-2021 SAP SE or an SAP affiliate company and hana-my-thai-star-data-generator contributors. "Please see our [LICENSE](https://github.com/SAP/hana-my-thai-star-data-generator/blob/master/LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available via the [REUSE tool](https://api.reuse.software/info/github.com/SAP/hana-my-thai-star-data-generator).
+Copyright (c) 2018-2023 SAP SE or an SAP affiliate company and hana-my-thai-star-data-generator contributors. "Please see our [LICENSE](https://github.com/SAP/hana-my-thai-star-data-generator/blob/master/LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available via the [REUSE tool](https://api.reuse.software/info/github.com/SAP/hana-my-thai-star-data-generator).
