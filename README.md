@@ -1,4 +1,6 @@
 # My Thai Star Data Generator
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP/hana-my-thai-star-data-generator)](https://api.reuse.software/info/github.com/SAP/hana-my-thai-star-data-generator)
+
 A data generator that creates sample data for the SAP HANA use-cases of the [devonfw](http://www.devonfw.com/) reference application ([My Thai Star](https://github.com/devonfw/my-thai-star))
 
 # Description
